@@ -22,15 +22,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -39,10 +30,10 @@ exports.searchProducts = exports.filterProducts = exports.softDeleteProducts = e
 const configaration_1 = __importDefault(require("../../Database/configaration"));
 const uid_1 = require("uid");
 const mssql_1 = __importStar(require("mssql"));
-const getProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getProducts = async (req, res) => {
     try {
-        const pool = yield mssql_1.default.connect(configaration_1.default);
-        const result = yield pool.request()
+        const pool = await mssql_1.default.connect(configaration_1.default);
+        const result = await pool.request()
             .execute('getProducts');
         if (result.rowsAffected[0] < 0) {
             res.json({ message: "No users", result });
@@ -52,7 +43,7 @@ const getProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     catch (error) {
         return res.json({ message: "Internal Error", error: error.message });
     }
-});
+};
 exports.getProducts = getProducts;
 //  interface File_  { 
 //  fieldname:string
@@ -64,15 +55,15 @@ exports.getProducts = getProducts;
 // 	path:string
 // 	size:number
 //  }
-const setProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const setProducts = async (req, res) => {
     const { name, cost, brand, category, description, Features, Specifications } = JSON.parse(req.body.data);
     let imagesNames = [];
     try {
         for (let i = 0; i < 3; i++) {
             // imagesNames.push(req.files[i].filename)
         }
-        const pool = yield mssql_1.default.connect(configaration_1.default);
-        const result = yield pool.request()
+        const pool = await mssql_1.default.connect(configaration_1.default);
+        const result = await pool.request()
             .input('id', mssql_1.default.VarChar(100), (0, uid_1.uid)(32))
             .input('name', mssql_1.default.VarChar(100), name)
             .input('price', mssql_1.default.Float, cost)
@@ -95,17 +86,17 @@ const setProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     catch (error) {
         return res.json({ message: "Internal Error", error: error.message });
     }
-});
+};
 exports.setProducts = setProducts;
-const UpdateProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const UpdateProducts = async (req, res) => {
     const { name, cost, brand, images, category, description, Features, Specifications } = JSON.parse(req.body.data);
     let imagesNames = [];
     for (let i = 0; i < 3; i++) {
         // imagesNames.push(req.files[i].filename)
     }
     try {
-        const pool = yield mssql_1.default.connect(configaration_1.default);
-        const result = yield pool.request()
+        const pool = await mssql_1.default.connect(configaration_1.default);
+        const result = await pool.request()
             .input('id', mssql_1.default.VarChar, req.params.id)
             .input('name', mssql_1.default.VarChar(100), name)
             .input('price', mssql_1.default.Float, cost)
@@ -126,12 +117,12 @@ const UpdateProducts = (req, res) => __awaiter(void 0, void 0, void 0, function*
     catch (error) {
         return res.json({ message: "Internal Error", error: error.message });
     }
-});
+};
 exports.UpdateProducts = UpdateProducts;
-const deleteProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteProducts = async (req, res) => {
     try {
-        const pool = yield mssql_1.default.connect(configaration_1.default);
-        const result = yield pool.request()
+        const pool = await mssql_1.default.connect(configaration_1.default);
+        const result = await pool.request()
             .input('id', mssql_1.default.VarChar, req.params.id)
             .execute('deleteProduct');
         if (result.rowsAffected[0] > 0) {
@@ -144,12 +135,12 @@ const deleteProducts = (req, res) => __awaiter(void 0, void 0, void 0, function*
     catch (error) {
         return res.json({ message: "Internal Error", error: error.message });
     }
-});
+};
 exports.deleteProducts = deleteProducts;
-const softDeleteProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const softDeleteProducts = async (req, res) => {
     try {
-        const pool = yield mssql_1.default.connect(configaration_1.default);
-        const result = yield pool.request()
+        const pool = await mssql_1.default.connect(configaration_1.default);
+        const result = await pool.request()
             .input('id', mssql_1.default.VarChar, req.params.id)
             .execute('SoftdeleteProduct');
         if (result.rowsAffected[0] > 0) {
@@ -162,20 +153,20 @@ const softDeleteProducts = (req, res) => __awaiter(void 0, void 0, void 0, funct
     catch (error) {
         return res.json({ message: "Internal Error", error: error.message });
     }
-});
+};
 exports.softDeleteProducts = softDeleteProducts;
-const filterProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const filterProducts = async (req, res) => {
     try {
     }
     catch (error) {
         return res.json({ message: "Internal Error", error: error.message });
     }
-});
+};
 exports.filterProducts = filterProducts;
-const searchProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const searchProducts = async (req, res) => {
     try {
-        const pool = yield mssql_1.default.connect(configaration_1.default);
-        const result = yield pool.request()
+        const pool = await mssql_1.default.connect(configaration_1.default);
+        const result = await pool.request()
             .input('name', mssql_1.default.VarChar, req.params.search)
             .execute('SearchProducts');
         if (result.rowsAffected[0] > 0) {
@@ -188,5 +179,5 @@ const searchProducts = (req, res) => __awaiter(void 0, void 0, void 0, function*
     catch (error) {
         return res.json({ message: "Internal Error", error: error.message });
     }
-});
+};
 exports.searchProducts = searchProducts;
