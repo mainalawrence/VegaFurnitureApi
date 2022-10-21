@@ -1,19 +1,24 @@
-CREATE USER IF NOT EXIST (
+CREATE TABLE  [IF NOT EXISTS] users(
     id serial,
     uid text PRIMARY KEY,
     firstName varchar(50),
     lastName varchar(50),
-    username varchar(50),
+    email varchar(50),
     phone varchar(20),
     password varchar(200),
-    active int
+    active int,
+    role int
 )
+
+
+
 
 -- get some few users;
 
 SELECT * FROM users ORDER BY uid LIMIT n OFFSET offset;
 
-SELECT * FROM users ;
+SELECT * FROM users WHERE active=1;
+SELECT * FROM users WHERE active=0;
 
 SELECT * from users WHERE uid=1;
 

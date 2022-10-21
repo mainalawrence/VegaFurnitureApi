@@ -1,109 +1,83 @@
- import  {Request,RequestHandler,Response}  from "express"
-import sql from 'mssql'
-import sqlConfig from "../../Database/configaration";
+import { json, Request, RequestHandler, Response } from "express"
+import sqlconnection from '../../Database/configaration'
+
 import bycrypt from 'bcrypt'
 import { uid } from 'uid';
- 
- export const getUsers:RequestHandler =async (req:Request,res:Response)=>{
-     
-     try {
-        const pool =await sql.connect(sqlConfig);
-        const result=await pool.request()
-        .execute('getUsers');
-        return res.json(result.recordset);
-     } catch (error:any) {
-         return res.json({message:"Internal Error",error:error.message})
-     }
 
- }
-  export const getTrushedUsers:RequestHandler =async (req:Request,res:Response)=>{
-     
-     try {
-        const pool =await sql.connect(sqlConfig);
-        const result=await pool.request()
-        .execute('trushedUsers');
-        return res.json(result.recordset);
-     } catch (error:any) {
-         return res.json({message:"Internal Error",error:error.message})
-     }
- }
- export const setUser:RequestHandler =async (req:Request,res:Response)=>{
-        const{firstName,lastName,email,password}=req.body 
-        let image:string='';   
+export const getUsers: RequestHandler = async (req: Request, res: Response) => {
+
     try {
-        let encpassword= await bycrypt.hash(password,10);
-        const pool =await sql.connect(sqlConfig);
-        const result=await pool.request()
-        .input('id', sql.VarChar,uid(32))
-        .input( 'firstName', sql.VarChar,firstName)
-        .input("lastName",sql.VarChar,lastName)
-        .input('email', sql.VarChar,email)
-        .input('password', sql.VarChar,encpassword)
-        .input('image', sql.VarChar,image)
-        .execute('createUser');
-        res.json(result);
-    } catch (error:any) {
-         return res.json({message:"Internal Error",error:error.message})
-     }
+        const result = await sqlconnection.query("SELECT * FROM users WHERE active=1;");
+        res.json(result.rows);
 
- }
- export const updateUser:RequestHandler =async (req:Request,res:Response)=>{
-           const{firstName,lastName,email,password,role}=req.body 
-        let image:string='';   
+    } catch (error: any) {
+        return res.json({ message: "Internal Error" })
+    }
+
+}
+export const getTrushedUsers: RequestHandler = async (req: Request, res: Response) => {
+
     try {
-        let encpassword= await bycrypt.hash(password,10);
-        const pool =await sql.connect(sqlConfig);
-        const result=await pool.request()
-        .input('id', sql.VarChar,req.params.id)
-        .input( 'firstName', sql.VarChar,firstName)
-        .input("lastName",sql.VarChar,lastName)
-        .input('email', sql.VarChar,email)
-        .input('password', sql.VarChar,encpassword)
-        .input('image', sql.VarChar,image)
-        .input('role', sql.VarChar,role)
-        .execute('updateUser');
+        const result = await sqlconnection.query("SELECT * FROM users WHERE active=0;");
+        res.json(result.rows);
 
-        return res.json(result)
-        
-    } catch (error:any) {
-         return res.json({message:"Internal Error",error:error.message})
-     }
+    } catch (error: any) {
+        return res.json({ message: "Internal Error", error: error.message })
+    }
+}
+export const setUser: RequestHandler = async (req: Request, res: Response) => {
+    const { firstName, lastName, email, password, phone } = req.body
 
- }
-export const RemoveUser:RequestHandler =async (req:Request,res:Response)=>{
-     try {
-        const pool =await sql.connect(sqlConfig);
-        const result=await pool.request()
-        .input('id',sql.VarChar,req.params.id)
-        .execute('deleteUser')
-           if(result.rowsAffected[0]>0){
-            res.json({message:'User Deleted Successfully',result});
-        }
-        else{
-            res.json({message:'Invalid User'})
-        }
-     } catch (error:any) {
-         return res.json({message:"Internal Error",error:error.message})
-     }
 
- }
+    try {
+        let encpassword = await bycrypt.hash(password, 10);
+        const result = await sqlconnection.query(`insert into users values(1,'${uid(32)}','${firstName}','${lastName}','${email}','${phone}','${encpassword}',1,0)`);
+        res.json(result.rows);
 
- export const softDeleteUser:RequestHandler =async (req:Request,res:Response)=>{
-     try {
-        const pool =await sql.connect(sqlConfig);
-        const result=await pool.request()
-        .input('id',sql.VarChar,req.params.id)
-        .execute('softDelete')
-           if(result.rowsAffected[0]>0){
-            res.json({message:'User Deleted Successfully',result});
-        }
-        else{
-            res.json({message:'Invalid User'})
-        }
-     } catch (error:any) {
-         return res.json({message:"Internal Error",error:error.message})
-     }
+    } catch (error: any) {
+        return res.json({ message: "Internal Error", error: error.message })
+    }
 
- }
+}
+export const updateUser: RequestHandler = async (req: Request, res: Response) => {
+    const { firstname, lastname, phone, email, password } = req.body
+
+    const id = req.params.id;
+    try {
+        let encpassword = await bycrypt.hash(password, 10);
+        const result = await sqlconnection.query(`UPDATE users set firstName='${firstname}',
+        lastName='${lastname}',email='${email}',phone='${phone}',password='${encpassword}',
+        role=0 WHERE uid='${id}'
+        `);
+
+        res.json(result.rowCount);
+    } catch (error: any) {
+        return res.json({ message: "Internal Error", error: error.message })
+    }
+
+}
+export const RemoveUser: RequestHandler = async (req: Request, res: Response) => {
+    const id = req.params.id;
+    try {
+        const result = await sqlconnection.query(`DELETE from users WHERE uid='${id}';`);
+        res.json(result.rows);
+    } catch (error: any) {
+        return res.json({ message: "Internal Error", error: error.message })
+    }
+
+}
+
+export const softDeleteUser: RequestHandler = async (req: Request, res: Response) => {
+    const id = req.params.id;
+
+    try {
+        const result = await sqlconnection.query(`UPDATE users SET active=0 WHERE uid='${id}';`);
+        res.json(result.rows);
+
+    } catch (error: any) {
+        return res.json({ message: "Internal Error", error: error.message })
+    }
+
+}
 
 

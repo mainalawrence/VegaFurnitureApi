@@ -1,9 +1,8 @@
  import  {Request,RequestHandler,Response}  from "express"
 
-import sql from 'mssql'
 import bycrypt from 'bcrypt'
+import sqlconnection from '../Database/configaration'
 
-import sqlConfig from "../Database/configaration"
 export const signUp:RequestHandler=async(req:Request,res:Response)=>{
         const{id,name,email,password}=req.body 
         let firstName=name.splite(' ')[0];
@@ -11,15 +10,8 @@ export const signUp:RequestHandler=async(req:Request,res:Response)=>{
         let image:string='';   
     try {
         let encpassword= await bycrypt.hash(password,10);
-        const pool =await sql.connect(sqlConfig);
-        const result=await pool.request()
-        .input('id', sql.VarChar,id)
-        .input( 'firstName', sql.VarChar,firstName)
-        .input("lastName",sql.VarChar,lastName)
-        .input('email', sql.VarChar,email)
-        .input('password', sql.VarChar,encpassword)
-        .input('image', sql.VarChar,image)
-        .execute('createUser');
+        const result=await sqlconnection.query("select * from users where email=$",email)
+        
         res.json(result);
     } catch (error) {
         console.log({message:error});  

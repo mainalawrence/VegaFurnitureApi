@@ -10,6 +10,7 @@ const UsersRoute_1 = __importDefault(require("./Routes/UsersRoute"));
 const ProductsRoute_1 = __importDefault(require("./Routes/ProductsRoute"));
 const orderRoute_1 = __importDefault(require("./Routes/orderRoute"));
 const AuthRoute_1 = __importDefault(require("./Routes/AuthRoute"));
+const Connect_1 = __importDefault(require("./Database/Connect"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 //access controller
@@ -20,6 +21,7 @@ app.use(express_1.default.static('Images'));
 ``;
 try {
     // dbConnection();
+    Connect_1.default;
 }
 catch (error) {
     console.log("Error :" + error.message);

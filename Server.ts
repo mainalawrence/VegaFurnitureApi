@@ -1,13 +1,11 @@
 import express from "express";
 import dotenv from 'dotenv';
 import cors from 'cors';
-import pg from 'pg'
-import { dbConnection } from "./Database/Connect";
 import UsersRoute from "./Routes/UsersRoute";
 import ProductsRoute from "./Routes/ProductsRoute";
 import orderRoute from "./Routes/orderRoute";
 import Auth from "./Routes/AuthRoute";
-
+import connect from "./Database/Connect"
 
 
 dotenv.config();
@@ -21,6 +19,7 @@ app.use(express.static('Images'));
 ``
 try {
   // dbConnection();
+  connect
 } catch (error:any) {
     console.log("Error :"+error.message);
 }

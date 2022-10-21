@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const Auth_1 = __importDefault(require("../Authentication/Auth"));
 const UsersController_1 = require("../Controller/Users/UsersController");
 const router = express_1.default.Router();
+//verifyToken()
 router.get('/users', (0, Auth_1.default)(), UsersController_1.getUsers);
 router.get('/trush/users/', (0, Auth_1.default)(), UsersController_1.getTrushedUsers);
 router.post('/users', UsersController_1.setUser);

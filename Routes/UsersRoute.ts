@@ -1,17 +1,17 @@
-import  Express from "express";
+import Express from "express";
 import verifyToken from "../Authentication/Auth";
-import { getUsers ,setUser,updateUser,RemoveUser,softDeleteUser,getTrushedUsers} from "../Controller/Users/UsersController";
+import { getUsers, setUser, updateUser, RemoveUser, softDeleteUser, getTrushedUsers } from "../Controller/Users/UsersController";
 
-const router=Express.Router();
+const router = Express.Router();
+//verifyToken()
+router.get('/users', verifyToken(), getUsers);
+router.get('/trush/users/', verifyToken(), getTrushedUsers);
 
-router.get('/users',verifyToken(),getUsers);
-router.get('/trush/users/',verifyToken(),getTrushedUsers);
+router.post('/users', setUser);
 
-router.post('/users',setUser);
+router.put('/users/:id', verifyToken(), updateUser);
 
-router.put('/users/:id',verifyToken(),updateUser);
-
-router.delete('/users/soft/:id',verifyToken(),softDeleteUser);
-router.delete('/users/:id',verifyToken(),RemoveUser);
+router.delete('/users/soft/:id', verifyToken(), softDeleteUser);
+router.delete('/users/:id', verifyToken(), RemoveUser);
 
 export default router;

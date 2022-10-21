@@ -4,28 +4,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LoginWithGoogle = exports.LoginWithFacebook = exports.login = void 0;
-const mssql_1 = __importDefault(require("mssql"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const configaration_1 = __importDefault(require("../Database/configaration"));
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const pool = await mssql_1.default.connect(configaration_1.default);
-        const result = await pool.request()
-            .input('email', mssql_1.default.VarChar(100), email)
-            .execute('login');
-        if (!result.recordset[0]) {
+        const result = await configaration_1.default.query(`SELECT * FROM users where email='${email}'`);
+        if (!result) {
             res.json({ message: "wrong username or password" });
         }
-        await bcrypt_1.default.compare(password, result.recordset[0].password, (error, data) => {
+        await bcrypt_1.default.compare(password, result.rows[0].password, (error, data) => {
             if (error) {
                 res.json({ Error: error });
             }
             if (data) {
-                const { id, firstName, lastName, email } = result.recordset[0];
+                const { id, firstName, lastName, email } = result.rows[0];
                 const token = jsonwebtoken_1.default.sign({ id, firstName, lastName, email }, process.env.SECREATE, { expiresIn: '1d' });
-                res.json({ role: result.recordset[0].role, id: result.recordset[0].id, email: result.recordset[0].email, name: result.recordset[0].firstName, token });
+                res.json({ role: result.rows[0].role, id: result.rows[0].id, email: result.rows[0].email, name: result.rows[0].firstName, token });
             }
             else {
                 res.json({ Message: "Invalid Username or Password" });
@@ -33,8 +29,7 @@ const login = async (req, res) => {
         });
     }
     catch (error) {
-        console.log({ message: error });
-        res.json({ message: "Internal Error", error });
+        res.json({ message: "Internal Error" });
     }
 };
 exports.login = login;

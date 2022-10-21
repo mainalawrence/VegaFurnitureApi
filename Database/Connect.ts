@@ -1,19 +1,12 @@
-import sqlConfig from './configaration'
-import sql from 'mssql'
-export const dbConnection=()=>{
-(
-    async()=>{
-    try {
-        
-        await sql.connect(sqlConfig).then(con=>{
-        if(con.connected)  console.log(`connected to database:${con.connected}`)
-        }).catch(err=>console.log(err))
+import sqlconnection from '../Database/configaration'
 
-    } catch (error:any) {
-        console.log("internale Error :"+error.message);
-        
-    }
-
-    }
-)()
+try {
+    const res=sqlconnection.connect((res)=>{
+    console.log(`database connected `);
+})
+} catch (error:any) {
+    console.log("Error :"+error.message);
 }
+
+
+export default sqlconnection;
