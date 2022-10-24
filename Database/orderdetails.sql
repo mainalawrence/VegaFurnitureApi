@@ -1,4 +1,4 @@
-CREATE orderdetails IF NOT EXIST (
+CREATE TABLE orderdetails(
     id SERIAL,
     uid text PRIMARY KEY,
     orders jsonb

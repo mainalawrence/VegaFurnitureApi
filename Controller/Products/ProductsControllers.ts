@@ -6,8 +6,10 @@ import sqlconnection from '../../Database/configaration'
 
 
 export const getProducts: RequestHandler = async (req: Request, res: Response) => {
-    try {
 
+    try {
+        const result = await sqlconnection.query("SELECT * FROM furnitures where active=1;");
+        res.json(result.rows);
 
     } catch (error: any) {
         return res.json({ message: "Internal Error", error: error.message })
@@ -15,27 +17,23 @@ export const getProducts: RequestHandler = async (req: Request, res: Response) =
 
 }
 
-//  interface File_  { 
-//  fieldname:string
-// 	originalname:string
-// 	encoding: string
-// 	mimetype: string
-// 	destination:string
-// 	filename:string
-// 	path:string
-// 	size:number
-//  }
 
 export const setProducts = async (req: Request, res: Response) => {
 
-    const { name, cost, brand, category, description, Features, Specifications } = JSON.parse(req.body.data)
-    let imagesNames: [] = [];
+    const { name, cost, type, color, measurement, deriveryTime } = JSON.parse(req.body.data)
 
 
     try {
+        let imagesNames: [] = [];
+        const files = req.files as { [filename: string]: Express.Multer.File[] };
+
         for (let i = 0; i < 3; i++) {
-            // imagesNames.push(req.files[i].filename)
+            // imagesNames.push(files[i].filename);
         }
+
+        const result = await sqlconnection.query(`insert into furnitures values(1,'${uid(64)}','${name}',
+        '${type}','${color}',${cost},'${measurement}',now(),'${JSON.stringify(imagesNames)}',1)`);
+        res.json(result.rows);
 
 
     } catch (error: any) {
@@ -44,15 +42,19 @@ export const setProducts = async (req: Request, res: Response) => {
 
 }
 export const UpdateProducts: RequestHandler = async (req: Request, res: Response) => {
-    const { name, cost, brand, images, category, description, Features, Specifications } = JSON.parse(req.body.data);
-    let imagesNames: [] = [];
-    for (let i = 0; i < 3; i++) {
-        // imagesNames.push(req.files[i].filename)
-    }
-
+    const { name, cost, type, color, measurement, deriveryTime } = JSON.parse(req.body.data)
     try {
 
+        let imagesNames: [] = [];
+        const files = req.files as { [filename: string]: Express.Multer.File[] };
 
+        for (let i = 0; i < 3; i++) {
+            // imagesNames.push(files[i].filename);
+        }
+
+        const result = await sqlconnection.query(`update  furnitures set name='${name}',
+        type='${type}',color='${color}',cost=${cost},measurement='${measurement}',pictures='${JSON.stringify(imagesNames)}' where uid='${req.params.id}'`);
+        res.json(result.rows);
 
     } catch (error: any) {
         return res.json({ message: "Internal Error", error: error.message })
@@ -61,7 +63,8 @@ export const UpdateProducts: RequestHandler = async (req: Request, res: Response
 }
 export const deleteProducts: RequestHandler = async (req: Request, res: Response) => {
     try {
-
+        const result = await sqlconnection.query(`DELETE FROM furnitures where uid='${req.params.id}'`);
+        res.json(result.rows);
     } catch (error: any) {
         return res.json({ message: "Internal Error", error: error.message })
     }
@@ -70,7 +73,8 @@ export const deleteProducts: RequestHandler = async (req: Request, res: Response
 
 export const softDeleteProducts: RequestHandler = async (req: Request, res: Response) => {
     try {
-
+        const result = await sqlconnection.query(`update furnitures set active=0 where uid='${req.params.id}'`);
+        res.json(result.rows);
     } catch (error: any) {
         return res.json({ message: "Internal Error", error: error.message })
     }
@@ -78,7 +82,8 @@ export const softDeleteProducts: RequestHandler = async (req: Request, res: Resp
 }
 export const filterProducts: RequestHandler = async (req: Request, res: Response) => {
     try {
-
+        const result = await sqlconnection.query(`SELECT * FROM furnitures where active=1 and type='${req.params.filter}';`);
+        res.json(result.rows);
     } catch (error: any) {
         return res.json({ message: "Internal Error", error: error.message })
     }
@@ -86,8 +91,9 @@ export const filterProducts: RequestHandler = async (req: Request, res: Response
 }
 export const searchProducts: RequestHandler = async (req: Request, res: Response) => {
     try {
-
-
+        const search = req.params.search.toLocaleLowerCase();
+        const result = await sqlconnection.query(`SELECT * FROM furnitures where type like '%${search}%' or name like '%${search}%' and active=1`);
+        res.json(result.rows);
     } catch (error: any) {
         return res.json({ message: "Internal Error", error: error.message })
     }

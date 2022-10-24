@@ -1,5 +1,5 @@
 CREATE TABLE orders (
-    id SERIAL,
+    id serial,
     uid text PRIMARY KEY,
     amount integer,
     cost money,
