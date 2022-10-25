@@ -26,7 +26,9 @@ export const getTrushedUsers: RequestHandler = async (req: Request, res: Respons
     }
 }
 export const setUser: RequestHandler = async (req: Request, res: Response) => {
-    const { firstName, lastName, email, password, phone } = req.body
+    const { name, email, password, phone } = req.body
+    let firstName = name.split(' ')[0];
+    let lastName = name.split(' ')[1];
 
 
     try {

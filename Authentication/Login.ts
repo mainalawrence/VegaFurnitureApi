@@ -20,7 +20,7 @@ export const login: RequestHandler = async (req: Request, res: Response) => {
             if (data) {
                 const { id, firstName, lastName, email } = result.rows[0]
                 const token = jwt.sign({ id, firstName, lastName, email }, process.env.SECREATE as string, { expiresIn: '1d' });
-                res.json({ role: result.rows[0].role, id: result.rows[0].id, email: result.rows[0].email, name: result.rows[0].firstName, token })
+                res.json({ role: result.rows[0].role, uid: result.rows[0].uid, email: result.rows[0].email, name: result.rows[0].firstname, token })
             }
             else {
                 res.json({ Message: "Invalid Username or Password" })

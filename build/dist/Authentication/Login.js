@@ -21,7 +21,7 @@ const login = async (req, res) => {
             if (data) {
                 const { id, firstName, lastName, email } = result.rows[0];
                 const token = jsonwebtoken_1.default.sign({ id, firstName, lastName, email }, process.env.SECREATE, { expiresIn: '1d' });
-                res.json({ role: result.rows[0].role, id: result.rows[0].id, email: result.rows[0].email, name: result.rows[0].firstName, token });
+                res.json({ role: result.rows[0].role, uid: result.rows[0].uid, email: result.rows[0].email, name: result.rows[0].firstname, token });
             }
             else {
                 res.json({ Message: "Invalid Username or Password" });

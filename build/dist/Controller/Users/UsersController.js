@@ -28,7 +28,9 @@ const getTrushedUsers = async (req, res) => {
 };
 exports.getTrushedUsers = getTrushedUsers;
 const setUser = async (req, res) => {
-    const { firstName, lastName, email, password, phone } = req.body;
+    const { name, email, password, phone } = req.body;
+    let firstName = name.split(' ')[0];
+    let lastName = name.split(' ')[1];
     try {
         let encpassword = await bcrypt_1.default.hash(password, 10);
         const result = await configaration_1.default.query(`insert into users values(1,'${(0, uid_1.uid)(32)}','${firstName}','${lastName}','${email}','${phone}','${encpassword}',1,0)`);
