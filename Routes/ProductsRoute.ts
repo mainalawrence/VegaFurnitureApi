@@ -1,10 +1,11 @@
 import Express from "express";
 import verifyToken from "../Authentication/Auth";
-import { getProducts, setProducts, searchProducts, deleteProducts, filterProducts, UpdateProducts, softDeleteProducts } from '../Controller/Products/ProductsControllers'
+import { getProducts, setProducts, searchProducts, getProduct, deleteProducts, filterProducts, UpdateProducts, softDeleteProducts } from '../Controller/Products/ProductsControllers'
 import { upload } from "../Utility/ProductImageUpload";
 const router = Express.Router();
 
 router.get('/products', getProducts);
+router.get('/products/:id', getProduct);
 
 router.put('/products/:id', verifyToken(), upload.array('Product', 3), UpdateProducts);
 

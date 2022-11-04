@@ -9,6 +9,7 @@ const ProductsControllers_1 = require("../Controller/Products/ProductsController
 const ProductImageUpload_1 = require("../Utility/ProductImageUpload");
 const router = express_1.default.Router();
 router.get('/products', ProductsControllers_1.getProducts);
+router.get('/products/:id', ProductsControllers_1.getProduct);
 router.put('/products/:id', (0, Auth_1.default)(), ProductImageUpload_1.upload.array('Product', 3), ProductsControllers_1.UpdateProducts);
 router.post('/products', (0, Auth_1.default)(), ProductImageUpload_1.upload.array('Product', 3), ProductsControllers_1.setProducts);
 router.post('/products/filter/:filter', ProductsControllers_1.filterProducts);

@@ -17,6 +17,17 @@ export const getProducts: RequestHandler = async (req: Request, res: Response) =
 
 }
 
+export const getProduct: RequestHandler = async (req: Request, res: Response) => {
+
+    try {
+        const result = await sqlconnection.query(`SELECT * FROM furnitures where active=1 and uid='${req.params.id}';`);
+        res.json(result.rows);
+
+    } catch (error: any) {
+        return res.json({ message: "Internal Error", error: error.message })
+    }
+
+}
 
 export const setProducts = async (req: Request, res: Response) => {
 
@@ -28,7 +39,7 @@ export const setProducts = async (req: Request, res: Response) => {
         const files = req.files as { [filename: string]: Express.Multer.File[] };
 
         for (let i = 0; i < 3; i++) {
-            // imagesNames.push(files[i].filename);
+            imagesNames.push(files[i].filename);
         }
 
         const result = await sqlconnection.query(`insert into furnitures values(1,'${uid(64)}','${name}',

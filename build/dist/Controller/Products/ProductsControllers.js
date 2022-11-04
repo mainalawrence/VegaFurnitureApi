@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.searchProducts = exports.filterProducts = exports.softDeleteProducts = exports.deleteProducts = exports.UpdateProducts = exports.setProducts = exports.getProducts = void 0;
+exports.searchProducts = exports.filterProducts = exports.softDeleteProducts = exports.deleteProducts = exports.UpdateProducts = exports.setProducts = exports.getProduct = exports.getProducts = void 0;
 const uid_1 = require("uid");
 const configaration_1 = __importDefault(require("../../Database/configaration"));
 const getProducts = async (req, res) => {
@@ -16,13 +16,23 @@ const getProducts = async (req, res) => {
     }
 };
 exports.getProducts = getProducts;
+const getProduct = async (req, res) => {
+    try {
+        const result = await configaration_1.default.query(`SELECT * FROM furnitures where active=1 and uid='${req.params.id}';`);
+        res.json(result.rows);
+    }
+    catch (error) {
+        return res.json({ message: "Internal Error", error: error.message });
+    }
+};
+exports.getProduct = getProduct;
 const setProducts = async (req, res) => {
     const { name, cost, type, color, measurement, deriveryTime } = JSON.parse(req.body.data);
     try {
         let imagesNames = [];
         const files = req.files;
         for (let i = 0; i < 3; i++) {
-            // imagesNames.push(files[i].filename);
+            imagesNames.push(files[i].filename);
         }
         const result = await configaration_1.default.query(`insert into furnitures values(1,'${(0, uid_1.uid)(64)}','${name}',
         '${type}','${color}',${cost},'${measurement}',now(),'${JSON.stringify(imagesNames)}',1)`);
