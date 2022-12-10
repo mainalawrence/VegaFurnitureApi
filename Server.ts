@@ -17,6 +17,7 @@ app.use(compression());
 //access controller
 
 app.use(express.json());
+app.use(cors())
 app.use(express.static('Images'));
 
 app.use((req, res, next) => {
@@ -35,7 +36,6 @@ try {
 } catch (error: any) {
   console.log("Error :" + error.message);
 }
-
 
 //Main routes
 app.use("/api", UsersRoute);

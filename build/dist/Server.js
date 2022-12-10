@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const cors_1 = __importDefault(require("cors"));
 const UsersRoute_1 = __importDefault(require("./Routes/UsersRoute"));
 const ProductsRoute_1 = __importDefault(require("./Routes/ProductsRoute"));
 const orderRoute_1 = __importDefault(require("./Routes/orderRoute"));
@@ -17,6 +18,7 @@ const app = (0, express_1.default)();
 app.use((0, express_2.default)());
 //access controller
 app.use(express_1.default.json());
+app.use((0, cors_1.default)());
 app.use(express_1.default.static('Images'));
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
