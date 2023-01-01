@@ -7,4 +7,5 @@ try {
 } catch (error: any) {
     console.log("Error :" + error.message);
 }
+
 export default sqlconnection;
