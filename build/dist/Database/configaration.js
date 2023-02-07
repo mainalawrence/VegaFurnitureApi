@@ -8,7 +8,7 @@ const pg_1 = require("pg");
 dotenv_1.default.config();
 const pool = new pg_1.Pool({
     user: process.env.DB_USERNAME,
-    password: process.env.PASSWORD,
+    password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     host: "127.0.0.1",
     port: 5432

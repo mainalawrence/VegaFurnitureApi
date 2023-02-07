@@ -24,11 +24,13 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   next();
 });
+
 app.get('/static', express.static(path.join(__dirname, 'furnitureApp')));
 
 app.get('/api', function (req, res) {
   res.sendFile(`/`, { root: path.join(__dirname, 'furnitureApp') });
 });
+
 
 //connect to database
 try {
