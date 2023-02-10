@@ -10,7 +10,6 @@ export const getOrders: RequestHandler = async (req: Request, res: Response) => 
     } catch (error: any) {
         return res.json({ message: "Internal Error", error: error.message })
     }
-
 }
 
 export const getOrdersDetails: RequestHandler = async (req: Request, res: Response) => {
