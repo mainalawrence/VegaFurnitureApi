@@ -4,8 +4,8 @@ CREATE TABLE orderdetails(
     orders jsonb
 )
 
--- get some few users;
 
+-- get some few users;
 SELECT * FROM orderdetails ORDER BY uid LIMIT n OFFSET offset;
 
 SELECT * FROM orderdetails ;
@@ -13,7 +13,6 @@ SELECT * FROM orderdetails ;
 SELECT * from orderdetails WHERE uid=1;
 
 DELETE orderdetails where uid=1;
-
 
 -- Update new value in the column c1 for all rows
 
