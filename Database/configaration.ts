@@ -8,6 +8,7 @@ const pool = new Pool({
     database: process.env.DB_NAME as string,
     host: "127.0.0.1" as string,
     port: 5432
+
 })
 
 export default pool;
