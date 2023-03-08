@@ -19,5 +19,4 @@ router.get('/google/callback', Passport.authenticate('google', { failureRedirect
 
 router.get('/facebook/callback', Passport.authenticate('facebook'), LoginWithFacebook)
 
-
 export default router;
