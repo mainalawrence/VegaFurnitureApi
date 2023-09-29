@@ -29,6 +29,9 @@ export const getProduct: RequestHandler = async (req: Request, res: Response) =>
 
 }
 
+interface MulterRequest extends Request {
+    file: any;
+}
 export const setProducts = async (req: Request, res: Response) => {
 
     const { name, cost, type, color, measurement, deriveryTime } = JSON.parse(req.body.data)
@@ -36,7 +39,8 @@ export const setProducts = async (req: Request, res: Response) => {
 
     try {
         let imagesNames: [] = [];
-        const files = req.files as { [filename: string]: Express.Multer.File[] };
+        // const files = req.files as { [filename: string]: Express.Multer.File[] };
+    
 
         for (let i = 0; i < 3; i++) {
             imagesNames.push(files[i].filename);

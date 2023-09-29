@@ -30,7 +30,7 @@ const setProducts = async (req, res) => {
     const { name, cost, type, color, measurement, deriveryTime } = JSON.parse(req.body.data);
     try {
         let imagesNames = [];
-        const files = req.files;
+        // const files = req.files as { [filename: string]: Express.Multer.File[] };
         for (let i = 0; i < 3; i++) {
             imagesNames.push(files[i].filename);
         }

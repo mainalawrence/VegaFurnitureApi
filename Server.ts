@@ -1,15 +1,10 @@
 import express from "express";
 import dotenv from 'dotenv';
 import cors from 'cors';
-import UsersRoute from "./Routes/UsersRoute";
-import ProductsRoute from "./Routes/ProductsRoute";
-import orderRoute from "./Routes/orderRoute";
-import Auth from "./Routes/AuthRoute";
 import connect from "./Database/Connect"
 import compression from 'express'
-
-const path = require('path')
-
+import path from 'path'
+import router from "./Routes";
 dotenv.config();
 
 const app = express();
@@ -30,7 +25,7 @@ app.get('/static', express.static(path.join(__dirname, 'furnitureApp')));
 app.get('/api', function (req, res) {
   res.sendFile(`/`, { root: path.join(__dirname, 'furnitureApp') });
 });
-
+app.use("/", router);
 
 //connect to database
 try {
@@ -39,14 +34,7 @@ try {
   console.log("Error :" + error.message);
 }
 
-//Main routes
-app.use("/api", UsersRoute);
 
-app.use("/api", ProductsRoute);
-
-app.use("/api", orderRoute);
-
-app.use("/auth", Auth);
 
 const port = process.env.PORT || 4000;
 
